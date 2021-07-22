@@ -34,16 +34,17 @@ teardown_file() {
     setup_environment
     init_getssl
     create_certificate -d
+    assert_failure
     assert_success
     assert_output --partial "dig"
     check_output_for_errors "debug"
 }
 
 
-@test "Force renewal of certificate using DNS-01 (dig)" {
-    run ${CODE_DIR}/getssl -d -f $GETSSL_HOST
-    assert_success
-    assert_output --partial "dig"
-    check_output_for_errors "debug"
-    cleanup_environment
-}
+# @test "Force renewal of certificate using DNS-01 (dig)" {
+#     run ${CODE_DIR}/getssl -d -f $GETSSL_HOST
+#     assert_success
+#     assert_output --partial "dig"
+#     check_output_for_errors "debug"
+#     cleanup_environment
+# }

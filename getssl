@@ -1447,6 +1447,7 @@ get_auth_dns() { # get the authoritative dns server for a domain (sets primary_n
       # domain is a CNAME: resolve it and continue with that
       debug Domain is a CNAME, actual domain is "$cname"
       gad_d=${cname}
+      res=
     fi
 
     # Use SOA +trace to find the name server

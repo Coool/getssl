@@ -8,11 +8,12 @@ SET COMMAND=%2 %3
 
 :CheckAlias
 REM check if OS *contains* staging
+SET IDN=%OS%.xn--t-r1a81lydm69gz81r.test
 IF NOT x%OS:duck=%==x%OS% GOTO duckdns
 IF NOT x%OS:dynu=%==x%OS% GOTO dynu
+IF NOT x%OS:acmedns=%==x%OS% GOTO acmedns
 IF NOT x%OS:bash=%==x%OS% GOTO bash
 SET ALIAS=%OS%.getssl.test
-SET IDN=%OS%.xn--t-r1a81lydm69gz81r.test
 SET STAGING=
 SET GETSSL_OS=%OS%
 GOTO Run
@@ -36,6 +37,12 @@ GOTO Run
 SET ALIAS=%OS:-dynu=%-getssl.freeddns.org
 SET STAGING=--env STAGING=true --env dynamic_dns=dynu
 SET GETSSL_OS=%OS:-dynu=%
+GOTO Run
+
+:acmedns
+SET ALIAS=%OS%-getssl.freeddns.org
+SET STAGING=--env STAGING=true --env dynamic_dns=acmedns
+SET GETSSL_OS=%OS:-acmedns=%
 GOTO Run
 
 :bash
