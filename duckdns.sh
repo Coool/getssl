@@ -1,0 +1,1 @@
+export DUCKDNS_TOKEN=1d616aa9-b8e4-4bb4-b312-3289de82badb 
