@@ -8,7 +8,7 @@ SET COMMAND=%2 %3
 
 :CheckAlias
 REM check if OS *contains* staging
-SET IDN=%OS%.xn--t-r1a81lydm69gz81r.test
+SET GETSSL_IDN_HOST=%OS%.xn--t-r1a81lydm69gz81r.test
 IF NOT x%OS:duck=%==x%OS% GOTO duckdns
 IF NOT x%OS:dynu=%==x%OS% GOTO dynu
 IF NOT x%OS:acmedns=%==x%OS% GOTO acmedns
@@ -29,13 +29,13 @@ GOTO CheckAlias
 
 :duckdns
 SET ALIAS=%OS:-duckdns=%-getssl.duckdns.org
-SET STAGING=--env STAGING=true --env dynamic_dns=duckdns
+SET STAGING=--env STAGING=true --env dynamic_dns=duckdns --env DUCKDNS_TOKEN=1d616aa9-b8e4-4bb4-b312-3289de82badb
 SET GETSSL_OS=%OS:-duckdns=%
 GOTO Run
 
 :dynu
 SET ALIAS=%OS:-dynu=%-getssl.freeddns.org
-SET STAGING=--env STAGING=true --env dynamic_dns=dynu
+SET STAGING=--env STAGING=true --env dynamic_dns=dynu --env DYNU_API_KEY=65cXefd35XbYf36546eg5dYcZT6X52Y2
 SET GETSSL_OS=%OS:-dynu=%
 GOTO Run
 
@@ -58,12 +58,13 @@ IF %ErrorLevel% EQU 1 GOTO End
 @echo on
 docker run -it ^
   --env GETSSL_HOST=%ALIAS% %STAGING% ^
+  --env GETSSL_IDN_HOST=%GETSSL_IDN_HOST% ^
   --env GETSSL_OS=%GETSSL_OS% ^
   -v %cd%:/getssl ^
   --rm ^
   --network %CurrDirName%_acmenet ^
   --network-alias %ALIAS% ^
-  --network-alias %IDN% ^
+  --network-alias %GETSSL_IDN_HOST% ^
   --network-alias a.%OS%.getssl.test ^
   --network-alias b.%OS%.getssl.test ^
   --network-alias c.%OS%.getssl.test ^

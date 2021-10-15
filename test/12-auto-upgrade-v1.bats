@@ -5,6 +5,16 @@ load '/bats-assert/load.bash'
 load '/getssl/test/test_helper.bash'
 
 
+setup() {
+    [ ! -f $BATS_RUN_TMPDIR/failed.skip ] || skip "skipping tests after first failure"
+}
+
+
+teardown() {
+    [ -n "$BATS_TEST_COMPLETED" ] || touch $BATS_RUN_TMPDIR/failed.skip
+}
+
+
 @test "Check that auto upgrade to v2 doesn't change pebble url" {
     if [ -n "$STAGING" ]; then
         skip "Using staging server, skipping internal test"
@@ -13,9 +23,9 @@ load '/getssl/test/test_helper.bash'
     setup_environment
     mkdir ${INSTALL_DIR}/.getssl
     cp "${CODE_DIR}/test/test-config/${CONFIG_FILE}" "${INSTALL_DIR}/.getssl/getssl.cfg"
-    run ${CODE_DIR}/getssl -d --check-config "$GETSSL_CMD_HOST"
+    run ${CODE_DIR}/getssl -U -d --check-config "$GETSSL_CMD_HOST"
     assert_success
-    assert_line 'Using certificate issuer: https://pebble:14000/dir'
+    assert_line --partial 'Using certificate issuer: https://pebble:14000/dir'
 }
 
 
@@ -27,9 +37,9 @@ load '/getssl/test/test_helper.bash'
     setup_environment
     mkdir ${INSTALL_DIR}/.getssl
     cp "${CODE_DIR}/test/test-config/${CONFIG_FILE}" "${INSTALL_DIR}/.getssl/getssl.cfg"
-    run ${CODE_DIR}/getssl -d --check-config "$GETSSL_CMD_HOST"
+    run ${CODE_DIR}/getssl -U -d --check-config "$GETSSL_CMD_HOST"
     assert_success
-    assert_line 'Using certificate issuer: https://acme-staging-v02.api.letsencrypt.org/directory'
+    assert_line --partial 'Using certificate issuer: https://acme-staging-v02.api.letsencrypt.org/directory'
 }
 
 
@@ -41,9 +51,9 @@ load '/getssl/test/test_helper.bash'
     setup_environment
     mkdir ${INSTALL_DIR}/.getssl
     cp "${CODE_DIR}/test/test-config/${CONFIG_FILE}" "${INSTALL_DIR}/.getssl/getssl.cfg"
-    run ${CODE_DIR}/getssl -d --check-config "$GETSSL_CMD_HOST"
+    run ${CODE_DIR}/getssl -U -d --check-config "$GETSSL_CMD_HOST"
     assert_success
-    assert_line 'Using certificate issuer: https://acme-v02.api.letsencrypt.org/directory'
+    assert_line --partial 'Using certificate issuer: https://acme-v02.api.letsencrypt.org/directory'
 }
 
 
@@ -55,9 +65,9 @@ load '/getssl/test/test_helper.bash'
     setup_environment
     mkdir ${INSTALL_DIR}/.getssl
     cp "${CODE_DIR}/test/test-config/${CONFIG_FILE}" "${INSTALL_DIR}/.getssl/getssl.cfg"
-    run ${CODE_DIR}/getssl -d --check-config "$GETSSL_CMD_HOST"
+    run ${CODE_DIR}/getssl -U -d --check-config "$GETSSL_CMD_HOST"
     assert_success
-    assert_line 'Using certificate issuer: https://acme-staging-v02.api.letsencrypt.org/directory'
+    assert_line --partial 'Using certificate issuer: https://acme-staging-v02.api.letsencrypt.org/directory'
 }
 
 
@@ -69,7 +79,7 @@ load '/getssl/test/test_helper.bash'
     setup_environment
     mkdir ${INSTALL_DIR}/.getssl
     cp "${CODE_DIR}/test/test-config/${CONFIG_FILE}" "${INSTALL_DIR}/.getssl/getssl.cfg"
-    run ${CODE_DIR}/getssl -d --check-config "$GETSSL_CMD_HOST"
+    run ${CODE_DIR}/getssl -U -d --check-config "$GETSSL_CMD_HOST"
     assert_success
-    assert_line 'Using certificate issuer: https://acme-v02.api.letsencrypt.org/directory'
+    assert_line --partial 'Using certificate issuer: https://acme-v02.api.letsencrypt.org/directory'
 }

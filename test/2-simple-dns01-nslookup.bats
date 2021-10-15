@@ -7,6 +7,7 @@ load '/getssl/test/test_helper.bash'
 
 # This is run for every test
 setup() {
+    [ ! -f $BATS_RUN_TMPDIR/failed.skip ] || skip "skipping tests after first failure"
     if [ -z "$STAGING" ]; then
         export CURL_CA_BUNDLE=/root/pebble-ca-bundle.crt
     fi
@@ -20,6 +21,7 @@ setup() {
 
 
 teardown() {
+    [ -n "$BATS_TEST_COMPLETED" ] || touch $BATS_RUN_TMPDIR/failed.skip
     if [ -f /usr/bin/dig.getssl.bak ]; then
         mv /usr/bin/dig.getssl.bak /usr/bin/dig
     fi
@@ -34,7 +36,7 @@ teardown() {
 
     setup_environment
     init_getssl
-    create_certificate -d
+    create_certificate
     assert_success
     assert_output --partial "nslookup"
     check_output_for_errors "debug"

@@ -7,6 +7,7 @@ load '/getssl/test/test_helper.bash'
 
 # This is run for every test
 setup() {
+    [ ! -f $BATS_RUN_TMPDIR/failed.skip ] || skip "skipping tests after first failure"
     for app in dig host nslookup
     do
         if [ -f /usr/bin/${app} ]; then
@@ -16,12 +17,12 @@ setup() {
 
     . /getssl/getssl --source
     find_dns_utils
-    _RUNNING_TEST=1
-    _USE_DEBUG=0
+    _USE_DEBUG=1
 }
 
 
 teardown() {
+    [ -n "$BATS_TEST_COMPLETED" ] || touch $BATS_RUN_TMPDIR/failed.skip
     for app in dig host nslookup
     do
         if [ -f /usr/bin/${app}.getssl.bak ]; then
